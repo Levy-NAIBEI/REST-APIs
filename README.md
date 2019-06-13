@@ -1,5 +1,5 @@
 ## REST-APIs
-These are APIs built with vanilla flask and flask-restful
+These are APIs built with Marshmallow and Flask-restful
 
 ### Running the App
 - Clone the repo:`git clone https://github.com/Levy-NAIBEI/REST-APIs.git`
