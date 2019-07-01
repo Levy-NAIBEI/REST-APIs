@@ -4,7 +4,7 @@ from flask_restful import Resource
 orders = []
 
 class Orders(Resource):
-	"""docstring for Orders"""
+	''' Retrieving and creating products'''
 	def get(self):
 		return jsonify({
 			'Your orders':orders
@@ -27,16 +27,45 @@ class Orders(Resource):
 
 		return (jsonify('Your Order', product))
 	
+	
+class SingleOrder(Resource):
+	''' Retrieving, updating and deleting a product by id'''
+	def get(self, id):
+		for prod in orders:
+			if prod['id'] == id:
+				return (jsonify({
+                    "Message": "Ok",
+                    "Product": prod
+                }))
+
+			return (jsonify({"Message": "Not found"}))
+
 	def put(self, id):
-		data = request.get_json(id)
-		name = data['name']
-		describe = data['describe']
-		price = data['price']
-		qty = data ['qty']
+		for prod in orders:
+			data = request.get_json()
+			if prod['id'] == id:
+				prod['name'] = data['name']
+				prod['describe'] = data['describe']
+				prod['price'] = data['price']
+				prod['qty'] = data ['qty']
+				return (jsonify({"Product": prod}))
 
-		data.name = name
-		data.describe = describe
-		data.price = price
-		data.qty = qty
+			updated_product = {
+				"id":id,
+				'Name':data['name'],
+				'Describe':data['describe'],
+				'Price':data['price'],
+				'Quantity':data['qty']
+			}
 
-		return (jsonify('Product successfully updated': data))
+			orders.append(updated_product)
+
+			return (jsonify({'Product successfully updated': updated_product}))
+    
+	def delete(self, id):
+		global orders
+		orders = [prod for prod in orders if prod['id'] != id]
+		return (jsonify({
+			"Message": "Product with id {} is deleted".format(id)
+			}))
+   		
