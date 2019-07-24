@@ -24,48 +24,42 @@ class Orders(Resource):
 		 }
 
 		orders.append(product)
-
 		return (jsonify('Your Order', product))
 	
 	
 class SingleOrder(Resource):
-	''' Retrieving, updating and deleting a product by id'''
+	''' Retrieving, updating and deleting a product by its id'''
 	def get(self, id):
+		global orders
 		for prod in orders:
 			if prod['id'] == id:
-				return (jsonify({
-                    "Message": "Ok",
-                    "Product": prod
-                }))
-
+				return (jsonify({"Product": prod}))
 			return (jsonify({"Message": "Not found"}))
 
 	def put(self, id):
+		global orders
+		data = request.get_json()
 		for prod in orders:
-			data = request.get_json()
 			if prod['id'] == id:
 				prod['name'] = data['name']
 				prod['describe'] = data['describe']
 				prod['price'] = data['price']
 				prod['qty'] = data ['qty']
-				return (jsonify({"Product": prod}))
+				# return (jsonify({"Product": prod}))
 
 			updated_product = {
-				"id":id,
+				'id':id,
 				'Name':data['name'],
-				'Describe':data['describe'],
+				'Description':data['describe'],
 				'Price':data['price'],
 				'Quantity':data['qty']
 			}
 
 			orders.append(updated_product)
-
 			return (jsonify({'Product successfully updated': updated_product}))
     
 	def delete(self, id):
 		global orders
 		orders = [prod for prod in orders if prod['id'] != id]
-		return (jsonify({
-			"Message": "Product with id {} is deleted".format(id)
-			}))
+		return (jsonify({ "Message": "Product with id {} is deleted".format(id)}))
    		
